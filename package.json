@@ -11,5 +11,11 @@
     "express": "~4.16.0",
     "http-errors": "~1.6.2",
     "morgan": "~1.9.0"
+    "body-parser": "^1.15.2",
+    "crypto-js": "^3.1.6",
+    "ws": "^1.1.0"
+  }
+  "engines": {
+    "node": ">=4.3.2"
   }
 }
