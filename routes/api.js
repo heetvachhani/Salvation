@@ -23,7 +23,8 @@ const initHttpServer = (app) => {
 
     app.get('/blocks', (req, res) => res.send(JSON.stringify(blockchain)));
     app.post('/mineBlock', (req, res) => {
-        var newBlock = generateNextBlock(req.body.data);
+        console.log('check req.body: ', req.body);
+        var newBlock = generateNextBlock(req.body);
         addBlock(newBlock);
         broadcast(responseLatestMsg());
         console.log('block added: ' + JSON.stringify(newBlock));
