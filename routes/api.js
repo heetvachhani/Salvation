@@ -3,16 +3,10 @@ var WebSocket = require("ws");
 var bodyParser = require('body-parser');
 var http_port = process.env.HTTP_PORT || 3001;
 var p2p_port = process.env.P2P_PORT || 6001;
-
-class Block {
-    constructor(index, previousHash, timestamp, data, hash) {
-        this.index = index;
-        this.previousHash = previousHash.toString();
-        this.timestamp = timestamp;
-        this.data = data;
-        this.hash = hash.toString();
-    }
-}
+var Block = require('./block').Block
+var getGenesisBlock = require('./block').getGenesisBlock
+var bodyParser = require('body-parser');
+var initialPeers = process.env.PEERS ? process.env.PEERS.split(',') : [];
 
 var sockets = [];
 var MessageType = {
@@ -21,12 +15,6 @@ var MessageType = {
     RESPONSE_BLOCKCHAIN: 2
 };
 
-var bodyParser = require('body-parser');
-var initialPeers = process.env.PEERS ? process.env.PEERS.split(',') : [];
-
-var getGenesisBlock = () => {
-    return new Block(0, "0", 1465154705, "my genesis block!!", "816534932c2b7154836da6afc367695e6337db8a921823784c14378abed4f7d7");
-};
 
 var blockchain = [getGenesisBlock()];
 
