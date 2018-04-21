@@ -1,6 +1,5 @@
 'use strict';
 var CryptoJS = require("crypto-js");
-var express = require("express");
 var bodyParser = require('body-parser');
 var WebSocket = require("ws");
 const express = require('express');
