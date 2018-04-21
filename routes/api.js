@@ -176,6 +176,7 @@ var responseLatestMsg = () => ({
     'type': MessageType.RESPONSE_BLOCKCHAIN,
     'data': JSON.stringify([getLatestBlock()])
 });
+
 var write = (ws, message) => ws.send(JSON.stringify(message));
 
 
@@ -193,13 +194,6 @@ const initP2PServer = () => {
     server.on('connection', ws => initConnection(ws));
     console.log('listening websocket p2p port on: ' + p2p_port);
 
-};
-
-var initConnection = (ws) => {
-    sockets.push(ws);
-    initMessageHandler(ws);
-    initErrorHandler(ws);
-    write(ws, queryChainLengthMsg());
 };
 
 module.exports = { initP2PServer, initHttpServer, connectToPeers }
