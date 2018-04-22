@@ -23,6 +23,12 @@ CryptoJS
 [Harsh Bhavsar](https://github.com/harshbits)<br>
 [Arijeet Roy](https://github.com/royarijeet19)<br>
 
+## Future Improvements
+
+* Gather more data for all species, create more robust blockchain and deep learning model and making more public involvement to create more awareness.
+* Implement parallel Blockchain for surrounding Eco System for better Analysis.
+
+
 ## References
 
 * https://www.nps.gov/yell/planyourvisit/weather.htm
