@@ -28,7 +28,7 @@ const initHttpServer = (app) => {
         client.lrange(req.params.qrCode, 0, -1, (err, result) => {
             const finalRes = result.map((o) => {
                 const resObj = JSON.parse(o)
-                return Object.assign({}, resObj.data, { riskFactor: resObj.riskFactor })
+                return Object.assign({}, {pos: `${resObj.pos.lat} , ${resObj.pos.lng}`} , resObj.data, { riskFactor: resObj.riskFactor })
             })
             res.send(finalRes)
         });
