@@ -15,9 +15,9 @@ CryptoJS
 [jsrqrcode - A QR code decoder](https://github.com/LazarSoft/jsqrcode)
 
 ## Contributors
-[Heet Vachhani](https://github.com/heetvachhani)
-[Vaishali Shah](https://github.com/vaishsh)
-[Harsh Bhavsar](https://github.com/harshbits)
-[Arijeet Roy](https://github.com/royarijeet19) 
+[Heet Vachhani](https://github.com/heetvachhani)<br>
+[Vaishali Shah](https://github.com/vaishsh)<br>
+[Harsh Bhavsar](https://github.com/harshbits)<br>
+[Arijeet Roy](https://github.com/royarijeet19)<br>
 
 
