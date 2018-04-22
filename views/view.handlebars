@@ -8,7 +8,7 @@
       <div class="col-sm-7">
         <div class="custom-file">
           <input type="file" class="custom-file-input" id="qrCode">
-          <label class="custom-file-label" for="customFile">Choose file</label>
+          <label class="custom-file-label" id="qrlabel" for="customFile">Choose file</label>
         </div>
       </div>
     </div>
@@ -16,36 +16,39 @@
     <button type="Submit" id="view" class="btn btn-primary">Search</button>
   </form>
   <br>
-  <div id="panda" style="display: none;">
-    <div class="card" style="width: 18rem;">
-      <img class="card-img-top" src="img/panda.jpg" alt="Card image cap">
-      <div class="card-body">
-        <p class="card-text">Giant Panda</p>
+  <div class="row justify-content-md-center">
+    <div id="panda" class="col-md-auto" style="display: none;">
+      <div class="card" style="width: 18rem;">
+        <img class="card-img-top" src="img/panda.jpg" alt="Card image cap">
+        <div class="card-body">
+          <p class="card-text">Giant Panda</p>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div id="bear" style="display: none;">
-    <div class="card" style="width: 18rem;">
-      <img class="card-img-top" src="img/bear.jpg" alt="Card image cap">
-      <div class="card-body">
-        <p class="card-text">Grizzly Bear</p>
+    <div id="bear" class="col-md-auto" style="display: none;">
+      <div class="card" style="width: 18rem;">
+        <img class="card-img-top" src="img/bear.jpg" alt="Card image cap">
+        <div class="card-body">
+          <p class="card-text">Grizzly Bear</p>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div id="leopard" style="display: none;">
-    <div class="card" style="width: 18rem;">
-      <img class="card-img-top" src="img/leopard.jpg" alt="Card image cap">
-      <div class="card-body">
-        <p class="card-text">Snow Leopard</p>
+    <div id="leopard" class="col-md-auto" style="display: none;">
+      <div class="card" style="width: 18rem;">
+        <img class="card-img-top" src="img/leopard.jpg" alt="Card image cap">
+        <div class="card-body">
+          <p class="card-text">Snow Leopard</p>
+        </div>
       </div>
     </div>
+
   </div>
 
   <div id= "result" style="display: none;">
     <br>
-    <h6>History of selected animal! </h6>
+    <h6>History of scanned animal! </h6>
     <table id="resultTable" class="table table-hover">
       <thead>
         <tr>
@@ -72,7 +75,12 @@
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <script type="text/javascript">
-  
+  $(document).ready(function(){
+        $('input[type="file"]').change(function(e){
+            var fileName = e.target.files[0].name;
+            $("#qrlabel").text(fileName);
+        });
+    });
 
   $( "#view" ).on("click", function(e) {
     let values = {};

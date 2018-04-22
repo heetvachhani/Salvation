@@ -5,9 +5,9 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class AnalyzeResponse extends Weather {
-
-	private String qrCode;
+public class AnalyzeResponse extends AnalyzeRequest {
 
 	private String riskFactor;
+	
+	private AnimalData data;
 }

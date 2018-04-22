@@ -13,6 +13,7 @@ import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
+import com.salvation.domain.AnimalDataRepository;
 import com.salvation.interceptor.LoggingRequestInterceptor;
 
 @Configuration
@@ -54,5 +55,11 @@ public class ApplicationConfiguration {
 		factory.setConnectTimeout(connectionTimeout);
 		return factory;
 	}
+	
+	@Bean
+	public AnimalDataRepository animalDataRepository() {
+		return new AnimalDataRepository();
+	}
+	
 
 }
