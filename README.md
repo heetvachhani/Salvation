@@ -15,6 +15,7 @@ CryptoJS
 [jsrqrcode - A QR code decoder](https://github.com/LazarSoft/jsqrcode)
 
 ## Team members
+(Names to be added)  
 Vaishali Shah  
 Arijeet Roy  
 
