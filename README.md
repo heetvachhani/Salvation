@@ -8,7 +8,9 @@ With the problem of particular endangered species declining in number with each 
 We solve the problem here by using Block chain where we create several blocks (to be continued.....)
 
 ## Libraries
-
+Redis
+Axios
+Express
 
 ## Team members
 
