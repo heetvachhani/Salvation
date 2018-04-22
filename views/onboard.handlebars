@@ -6,7 +6,10 @@
     <div class="form-group row">
       <label for="qrCode" class="col-sm-2 col-form-label">Scan QR code</label>
       <div class="col-sm-7">
-        <input type="text" class="form-control" id="qrCode" placeholder="Read QR">
+        <div class="custom-file">
+          <input type="file" class="custom-file-input" id="qrCode">
+          <label class="custom-file-label" for="customFile">Choose file</label>
+        </div>
       </div>
     </div>
 
@@ -40,26 +43,61 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<!-- add js for qrcode scanner -->
+<script type="text/javascript" src="javascripts/grid.js"></script>
+<script type="text/javascript" src="javascripts/version.js"></script>
+<script type="text/javascript" src="javascripts/detector.js"></script>
+<script type="text/javascript" src="javascripts/formatinf.js"></script>
+<script type="text/javascript" src="javascripts/errorlevel.js"></script>
+<script type="text/javascript" src="javascripts/bitmat.js"></script>
+<script type="text/javascript" src="javascripts/datablock.js"></script>
+<script type="text/javascript" src="javascripts/bmparser.js"></script>
+<script type="text/javascript" src="javascripts/datamask.js"></script>
+<script type="text/javascript" src="javascripts/rsdecoder.js"></script>
+<script type="text/javascript" src="javascripts/gf256poly.js"></script>
+<script type="text/javascript" src="javascripts/gf256.js"></script>
+<script type="text/javascript" src="javascripts/decoder.js"></script>
+<script type="text/javascript" src="javascripts/qrcode.js"></script>
+<script type="text/javascript" src="javascripts/findpat.js"></script>
+<script type="text/javascript" src="javascripts/alignpat.js"></script>
+<script type="text/javascript" src="javascripts/databr.js"></script>
 
 <script type="text/javascript">
   $( "#onboard" ).on("click", function(e) {
     let values = {};
+    const reader  = new FileReader();
 
-    values['qrCode'] = $('#qrCode').val()
-    values['animalType'] = $('#inputGroupSelect02').val()
-    values['animalName'] = $('#animalName').val()
+    const file = document.getElementById('qrCode').files[0];
+    if (file) {
+        reader.onloadend = function () {
+          // decode qr code
+          qrcode.decode(reader.result)
+        }
+
+
+        reader.readAsDataURL(file);
+    }
+
+    qrcode.callback = function (qrDecodeData) {
+      values['qrCode'] = qrDecodeData
+      values['animalType'] = $('#inputGroupSelect02').val()
+      values['animalName'] = $('#animalName').val()
+
+      const jsonString =JSON.stringify(values)
+
+      console.log(jsonString)
+      $.ajax({
+        type: "POST",
+        url: '/mineBlock',
+        data: jsonString,
+        success: function(msg) {
+           alert(` Animal added successfully`);
+        }  
+      });
+    };
+
     
-    const jsonString =JSON.stringify(values)
-
-    console.log(jsonString)
-    $.ajax({
-      type: "POST",
-      url: '/mineBlock',
-      data: jsonString,
-      success: function(msg) {
-         console.log("added successfully");
-      }  
-    });
+    
     e.preventDefault();
   });
 </script>
