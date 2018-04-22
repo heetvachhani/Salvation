@@ -104,18 +104,18 @@
         $('#panda').hide();
       }
 
-      // $.ajax({
-      //   type: "GET",
-      //   url: `/blocks?qrCode=${qrDecodeData}`,
-      //   success: function(data) {
-      //     (data.length < 1) ? ('#noresult').show() : displayTable(data);
-      //   },
-      //   beforeSend: function() {
-      //     $('#result').hide();
-      //     $('#noresult').hide();
-      //     $('#resultTable tbody').empty();
-      //   } 
-      // });
+      $.ajax({
+        type: "GET",
+        url: `/blocks/${qrDecodeData}`,
+        success: function(data) {
+          (data.length < 1) ? ('#noresult').show() : displayTable(data);
+        },
+        beforeSend: function() {
+          $('#result').hide();
+          $('#noresult').hide();
+          $('#resultTable tbody').empty();
+        } 
+      });
     }
 
       
