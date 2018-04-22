@@ -1,1 +1,8 @@
+spring:
+  redis:
+    host: albacore.redistogo.com
+    port: 9013
+    password: 36dbd143f60a86077a358b0b4e14df0a
+    database: 0
+    
 push.data.url: localhost:8080/send

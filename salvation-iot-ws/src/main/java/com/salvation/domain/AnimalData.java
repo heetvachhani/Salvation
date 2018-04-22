@@ -1,16 +1,11 @@
 package com.salvation.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
-public class AnimalData {
-
-	private String qrCode; 
+@EqualsAndHashCode(callSuper = false)
+public class AnimalData extends Weather{
 	
-	private String animalName;
-	
-	private Location location;
-	
-	private Weather weather;
 	
 }
