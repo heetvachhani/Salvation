@@ -63,6 +63,17 @@
 <script type="text/javascript" src="javascripts/databr.js"></script>
 
 <script type="text/javascript">
+  let pos = "";
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      pos = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      }
+      
+    });
+  } 
+
   $( "#onboard" ).on("click", function(e) {
     let values = {};
     const reader  = new FileReader();
@@ -82,7 +93,7 @@
       values['qrCode'] = qrDecodeData
       values['animalType'] = $('#inputGroupSelect02').val()
       values['animalName'] = $('#animalName').val()
-
+      values['pos'] = pos;
       const jsonString =JSON.stringify(values)
 
       console.log(jsonString)
