@@ -104,24 +104,6 @@ var getLatestBlock = (qrCode, callback) => {
     });
 }
 
-var isValidNewBlock = (newBlock, previousBlock) => {
-    if (previousBlock.index + 1 !== newBlock.index) {
-        console.log('invalid index');
-        return false;
-    } else if (previousBlock.hash !== newBlock.previousHash) {
-        console.log('invalid previoushash');
-        return false;
-    } else if (calculateHashForBlock(newBlock) !== newBlock.hash) {
-        console.log(typeof (newBlock.hash) + ' ' + typeof calculateHashForBlock(newBlock));
-        console.log('invalid hash: ' + calculateHashForBlock(newBlock) + ' ' + newBlock.hash);
-        return false;
-    }
-    return true;
-};
-
-var calculateHashForBlock = (block) => {
-    return calculateHash(block.index, block.previousHash, block.timestamp, block.data);
-};
 
 var calculateHash = (index, previousHash, timestamp, data) => {
     const prevHash = previousHash || '816534932c2b7154836da6afc367695e6337db8a921823784c14378abed4f7d7'
@@ -147,8 +129,8 @@ const connectToPeers = (newPeers) => {
 
 var initConnection = (ws) => {
     sockets.push(ws);
-    initMessageHandler(ws);
-    initErrorHandler(ws);
+    // initMessageHandler(ws);
+    // initErrorHandler(ws);
     write(ws, queryChainLengthMsg());
 };
 
@@ -218,11 +200,29 @@ var isValidChain = (blockchainToValidate) => {
     return true;
 };
 
+var isValidNewBlock = (newBlock, previousBlock) => {
+    if (previousBlock.index + 1 !== newBlock.index) {
+        console.log('invalid index');
+        return false;
+    } else if (previousBlock.hash !== newBlock.previousHash) {
+        console.log('invalid previoushash');
+        return false;
+    } else if (calculateHashForBlock(newBlock) !== newBlock.hash) {
+        console.log(typeof (newBlock.hash) + ' ' + typeof calculateHashForBlock(newBlock));
+        console.log('invalid hash: ' + calculateHashForBlock(newBlock) + ' ' + newBlock.hash);
+        return false;
+    }
+    return true;
+};
 
+var calculateHashForBlock = (block) => {
+    return calculateHash(block.index, block.previousHash, block.timestamp, block.data);
+};
 
 
 var queryChainLengthMsg = () => ({'type': MessageType.QUERY_LATEST});
 var queryAllMsg = () => ({'type': MessageType.QUERY_ALL});
+
 var responseChainMsg = () =>({
     'type': MessageType.RESPONSE_BLOCKCHAIN, 'data': JSON.stringify(blockchain)
 });
