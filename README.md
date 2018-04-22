@@ -7,6 +7,10 @@ With the problem of particular endangered species declining in number with each 
 ## Technologies
 We solve the problem here by using Block chain technology, where we treat each species entity as a block. A blockchain is a sequential list of blocks which are secured using cryptography. We use the CryptoJS library to provide SHA-256 encryption to the blocks where each block contains information like location, temperature and other attributes related to the species entity so that we can track it for safety purposes. We also analyze the risk factor to the particular species entity using a predictive model which predicts on basis of various external factors whether there exists a risk to the species.
 
+## Salvation Architecture
+
+![Salvation Architecture](Salvation.png?raw=true "Salvation Architecture")
+
 ## Libraries
 TensorFlow <br/>
 Keras<br/>
