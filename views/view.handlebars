@@ -44,20 +44,27 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-<script src="javascripts/helper.js"></script>
 <script type="text/javascript">
   
 
   $( "#view" ).on("click", function(e) {
     let values = {};
     const file = document.getElementById('qrCode').files[0];
-    let qrCode = getQRCode(file);
+
+    if (file) {
+        reader.onloadend = function () {
+          // decode qr code
+          qrcode.decode(reader.result)
+        }
+        reader.readAsDataURL(file);
+    }
+
+    qrcode.callback = function (qrDecodeData) {
       $.ajax({
         type: "GET",
-        url: `/blocks?qrCode=${qrCode}`,
-        data: jsonString,
+        url: `/blocks?qrCode=${qrDecodeData}`,
         success: function(data) {
-           data.length
+          (data.length < 1) ? ('#noresult').show() : displayTable(data);
         },
         beforeSend: function() {
           $('#result').hide();
@@ -65,6 +72,9 @@
           $('#resultTable tbody').empty();
         } 
       });
+    }
+
+      
 
     e.preventDefault();
   });
