@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class AnimalData {
 
-	private String tagNumber; 
+	private String qrCode; 
 	
 	private String animalName;
 	

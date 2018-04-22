@@ -1,12 +1,15 @@
 <div>
 
-  <h5> Onboard Animal</h5>
+  <h6> Onboard Animal</h6>
   <hr>
   <form id="onboardForm">
     <div class="form-group row">
       <label for="qrCode" class="col-sm-2 col-form-label">Scan QR code</label>
       <div class="col-sm-7">
-        <input type="text" class="form-control" id="qrCode" placeholder="Read QR">
+        <div class="custom-file">
+          <input type="file" class="custom-file-input" id="qrCode">
+          <label class="custom-file-label" for="customFile">Choose file</label>
+        </div>
       </div>
     </div>
 
@@ -40,26 +43,72 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<!-- add js for qrcode scanner -->
+<script type="text/javascript" src="javascripts/jsqrcode/grid.js"></script>
+<script type="text/javascript" src="javascripts/jsqrcode/version.js"></script>
+<script type="text/javascript" src="javascripts/jsqrcode/detector.js"></script>
+<script type="text/javascript" src="javascripts/jsqrcode/formatinf.js"></script>
+<script type="text/javascript" src="javascripts/jsqrcode/errorlevel.js"></script>
+<script type="text/javascript" src="javascripts/jsqrcode/bitmat.js"></script>
+<script type="text/javascript" src="javascripts/jsqrcode/datablock.js"></script>
+<script type="text/javascript" src="javascripts/jsqrcode/bmparser.js"></script>
+<script type="text/javascript" src="javascripts/jsqrcode/datamask.js"></script>
+<script type="text/javascript" src="javascripts/jsqrcode/rsdecoder.js"></script>
+<script type="text/javascript" src="javascripts/jsqrcode/gf256poly.js"></script>
+<script type="text/javascript" src="javascripts/jsqrcode/gf256.js"></script>
+<script type="text/javascript" src="javascripts/jsqrcode/decoder.js"></script>
+<script type="text/javascript" src="javascripts/jsqrcode/qrcode.js"></script>
+<script type="text/javascript" src="javascripts/jsqrcode/findpat.js"></script>
+<script type="text/javascript" src="javascripts/jsqrcode/alignpat.js"></script>
+<script type="text/javascript" src="javascripts/jsqrcode/databr.js"></script>
 
 <script type="text/javascript">
+  let pos = "";
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      pos = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      }
+      
+    });
+  } 
+
   $( "#onboard" ).on("click", function(e) {
     let values = {};
+    const reader  = new FileReader();
 
-    values['qrCode'] = $('#qrCode').val()
-    values['animalType'] = $('#inputGroupSelect02').val()
-    values['animalName'] = $('#animalName').val()
+    const file = document.getElementById('qrCode').files[0];
+    if (file) {
+        reader.onloadend = function () {
+          // decode qr code
+          qrcode.decode(reader.result)
+        }
+
+
+        reader.readAsDataURL(file);
+    }
+
+    qrcode.callback = function (qrDecodeData) {
+      values['qrCode'] = qrDecodeData
+      values['animalType'] = $('#inputGroupSelect02').val()
+      values['animalName'] = $('#animalName').val()
+      values['pos'] = pos;
+      const jsonString =JSON.stringify(values)
+
+      console.log(jsonString)
+      $.ajax({
+        type: "POST",
+        url: '/mineBlock',
+        data: jsonString,
+        success: function(msg) {
+           alert(` Animal added successfully`);
+        }  
+      });
+    };
+
     
-    const jsonString =JSON.stringify(values)
-
-    console.log(jsonString)
-    $.ajax({
-      type: "POST",
-      url: '/mineBlock',
-      data: jsonString,
-      success: function(msg) {
-         console.log("added successfully");
-      }  
-    });
+    
     e.preventDefault();
   });
 </script>
