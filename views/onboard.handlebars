@@ -81,10 +81,10 @@
       console.log(jsonString)
       $.ajax({
         type: "POST",
-        url: '/mineBlock',
+        url: '/startBlockChain',
         data: jsonString,
         success: function(msg) {
-           alert(` Animal added successfully`);
+           alert(`Animal added successfully`);
         }  
       });
     };
