@@ -14,9 +14,10 @@ Express
 CryptoJS  
 [jsrqrcode - A QR code decoder](https://github.com/LazarSoft/jsqrcode)
 
-## Team members
-(Names to be added)  
-Vaishali Shah  
-Arijeet Roy  
+## Contributors
+[Heet Vachhani](https://github.com/heetvachhani)
+[Vaishali Shah](https://github.com/vaishsh)
+[Harsh Bhavsar](https://github.com/harshbits)
+[Arijeet Roy](https://github.com/royarijeet19) 
 
 
