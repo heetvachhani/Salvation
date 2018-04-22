@@ -43,24 +43,7 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-<!-- add js for qrcode scanner -->
-<script type="text/javascript" src="javascripts/jsqrcode/grid.js"></script>
-<script type="text/javascript" src="javascripts/jsqrcode/version.js"></script>
-<script type="text/javascript" src="javascripts/jsqrcode/detector.js"></script>
-<script type="text/javascript" src="javascripts/jsqrcode/formatinf.js"></script>
-<script type="text/javascript" src="javascripts/jsqrcode/errorlevel.js"></script>
-<script type="text/javascript" src="javascripts/jsqrcode/bitmat.js"></script>
-<script type="text/javascript" src="javascripts/jsqrcode/datablock.js"></script>
-<script type="text/javascript" src="javascripts/jsqrcode/bmparser.js"></script>
-<script type="text/javascript" src="javascripts/jsqrcode/datamask.js"></script>
-<script type="text/javascript" src="javascripts/jsqrcode/rsdecoder.js"></script>
-<script type="text/javascript" src="javascripts/jsqrcode/gf256poly.js"></script>
-<script type="text/javascript" src="javascripts/jsqrcode/gf256.js"></script>
-<script type="text/javascript" src="javascripts/jsqrcode/decoder.js"></script>
-<script type="text/javascript" src="javascripts/jsqrcode/qrcode.js"></script>
-<script type="text/javascript" src="javascripts/jsqrcode/findpat.js"></script>
-<script type="text/javascript" src="javascripts/jsqrcode/alignpat.js"></script>
-<script type="text/javascript" src="javascripts/jsqrcode/databr.js"></script>
+
 
 <script type="text/javascript">
   let pos = "";
@@ -79,13 +62,12 @@
     const reader  = new FileReader();
 
     const file = document.getElementById('qrCode').files[0];
+    
     if (file) {
         reader.onloadend = function () {
           // decode qr code
           qrcode.decode(reader.result)
         }
-
-
         reader.readAsDataURL(file);
     }
 

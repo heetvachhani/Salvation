@@ -15,10 +15,37 @@
 
     <button type="Submit" id="view" class="btn btn-primary">Search</button>
   </form>
+  <br>
+  <div id="panda" style="display: none;">
+    <div class="card" style="width: 18rem;">
+      <img class="card-img-top" src="img/panda.jpg" alt="Card image cap">
+      <div class="card-body">
+        <p class="card-text">Giant Panda</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="bear" style="display: none;">
+    <div class="card" style="width: 18rem;">
+      <img class="card-img-top" src="img/bear.jpg" alt="Card image cap">
+      <div class="card-body">
+        <p class="card-text">Grizzly Bear</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="leopard" style="display: none;">
+    <div class="card" style="width: 18rem;">
+      <img class="card-img-top" src="img/leopard.jpg" alt="Card image cap">
+      <div class="card-body">
+        <p class="card-text">Snow Leopard</p>
+      </div>
+    </div>
+  </div>
 
   <div id= "result" style="display: none;">
     <br>
-
+    <h6>History of selected animal! </h6>
     <table id="resultTable" class="table table-hover">
       <thead>
         <tr>
@@ -50,6 +77,7 @@
   $( "#view" ).on("click", function(e) {
     let values = {};
     const file = document.getElementById('qrCode').files[0];
+    const reader  = new FileReader();
 
     if (file) {
         reader.onloadend = function () {
@@ -60,18 +88,34 @@
     }
 
     qrcode.callback = function (qrDecodeData) {
-      $.ajax({
-        type: "GET",
-        url: `/blocks?qrCode=${qrDecodeData}`,
-        success: function(data) {
-          (data.length < 1) ? ('#noresult').show() : displayTable(data);
-        },
-        beforeSend: function() {
-          $('#result').hide();
-          $('#noresult').hide();
-          $('#resultTable tbody').empty();
-        } 
-      });
+      if(qrDecodeData === "234567"){
+        $('#bear').hide();
+        $('#leopard').hide();
+        $('#panda').show();
+      }
+      else if(qrDecodeData === "123456"){
+        $('#bear').show();
+        $('#leopard').hide();
+        $('#panda').hide();
+      }
+      else if(qrDecodeData === "345678"){
+        $('#leopard').show();
+        $('#bear').hide();
+        $('#panda').hide();
+      }
+
+      // $.ajax({
+      //   type: "GET",
+      //   url: `/blocks?qrCode=${qrDecodeData}`,
+      //   success: function(data) {
+      //     (data.length < 1) ? ('#noresult').show() : displayTable(data);
+      //   },
+      //   beforeSend: function() {
+      //     $('#result').hide();
+      //     $('#noresult').hide();
+      //     $('#resultTable tbody').empty();
+      //   } 
+      // });
     }
 
       
