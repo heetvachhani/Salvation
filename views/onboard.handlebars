@@ -1,6 +1,6 @@
 <div>
 
-  <h5> Onboard Animal</h5>
+  <h6> Onboard Animal</h6>
   <hr>
   <form id="onboardForm">
     <div class="form-group row">
@@ -43,24 +43,7 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-<!-- add js for qrcode scanner -->
-<script type="text/javascript" src="javascripts/grid.js"></script>
-<script type="text/javascript" src="javascripts/version.js"></script>
-<script type="text/javascript" src="javascripts/detector.js"></script>
-<script type="text/javascript" src="javascripts/formatinf.js"></script>
-<script type="text/javascript" src="javascripts/errorlevel.js"></script>
-<script type="text/javascript" src="javascripts/bitmat.js"></script>
-<script type="text/javascript" src="javascripts/datablock.js"></script>
-<script type="text/javascript" src="javascripts/bmparser.js"></script>
-<script type="text/javascript" src="javascripts/datamask.js"></script>
-<script type="text/javascript" src="javascripts/rsdecoder.js"></script>
-<script type="text/javascript" src="javascripts/gf256poly.js"></script>
-<script type="text/javascript" src="javascripts/gf256.js"></script>
-<script type="text/javascript" src="javascripts/decoder.js"></script>
-<script type="text/javascript" src="javascripts/qrcode.js"></script>
-<script type="text/javascript" src="javascripts/findpat.js"></script>
-<script type="text/javascript" src="javascripts/alignpat.js"></script>
-<script type="text/javascript" src="javascripts/databr.js"></script>
+
 
 <script type="text/javascript">
   let pos = "";
@@ -79,13 +62,12 @@
     const reader  = new FileReader();
 
     const file = document.getElementById('qrCode').files[0];
+    
     if (file) {
         reader.onloadend = function () {
           // decode qr code
           qrcode.decode(reader.result)
         }
-
-
         reader.readAsDataURL(file);
     }
 
@@ -99,10 +81,11 @@
       console.log(jsonString)
       $.ajax({
         type: "POST",
-        url: '/mineBlock',
+        url: '/startBlockChain',
+        contentType: "application/json; charset=utf-8",
         data: jsonString,
         success: function(msg) {
-           alert(` Animal added successfully`);
+           alert(`Animal added successfully`);
         }  
       });
     };

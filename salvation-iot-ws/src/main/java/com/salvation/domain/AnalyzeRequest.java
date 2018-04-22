@@ -13,7 +13,12 @@ public class AnalyzeRequest{
 	@NotNull(message = "Required field qrCode can not be null")
 	private String qrCode;
 	
+	private String animalType;
+	
+	private String animalName;
+	
 	@Valid
 	@NotNull(message = "Required field pos can not be null")
 	private Location pos;
+	
 }

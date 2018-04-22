@@ -1,0 +1,125 @@
+<div>
+
+  <h6> Animal history</h6>
+  <hr>
+  <form id="onboardForm">
+    <div class="form-group row">
+      <label for="qrCode" class="col-sm-2 col-form-label">Scan QR code</label>
+      <div class="col-sm-7">
+        <div class="custom-file">
+          <input type="file" class="custom-file-input" id="qrCode">
+          <label class="custom-file-label" for="customFile">Choose file</label>
+        </div>
+      </div>
+    </div>
+
+    <button type="Submit" id="view" class="btn btn-primary">Search</button>
+  </form>
+  <br>
+  <div id="panda" style="display: none;">
+    <div class="card" style="width: 18rem;">
+      <img class="card-img-top" src="img/panda.jpg" alt="Card image cap">
+      <div class="card-body">
+        <p class="card-text">Giant Panda</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="bear" style="display: none;">
+    <div class="card" style="width: 18rem;">
+      <img class="card-img-top" src="img/bear.jpg" alt="Card image cap">
+      <div class="card-body">
+        <p class="card-text">Grizzly Bear</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="leopard" style="display: none;">
+    <div class="card" style="width: 18rem;">
+      <img class="card-img-top" src="img/leopard.jpg" alt="Card image cap">
+      <div class="card-body">
+        <p class="card-text">Snow Leopard</p>
+      </div>
+    </div>
+  </div>
+
+  <div id= "result" style="display: none;">
+    <br>
+    <h6>History of selected animal! </h6>
+    <table id="resultTable" class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">Last Known</th>
+          <th scope="col">Condition</th>
+          <th scope="col">Temperature</th>
+          <th scope="col">Precipitation</th>
+          <th scope="col">SnowFall</th>
+          <th scope="col">Co2Emission</th>
+          <th scope="col">NitrogenLevel</th>
+          <th scope="col">RiskFactor</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+  </div>
+
+  <div id="noresult" style="display: none;">
+    <h6>No animal found from QR scan!</h6>
+  </div>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+  
+
+  $( "#view" ).on("click", function(e) {
+    let values = {};
+    const file = document.getElementById('qrCode').files[0];
+    const reader  = new FileReader();
+
+    if (file) {
+        reader.onloadend = function () {
+          // decode qr code
+          qrcode.decode(reader.result)
+        }
+        reader.readAsDataURL(file);
+    }
+
+    qrcode.callback = function (qrDecodeData) {
+      if(qrDecodeData === "234567"){
+        $('#bear').hide();
+        $('#leopard').hide();
+        $('#panda').show();
+      }
+      else if(qrDecodeData === "123456"){
+        $('#bear').show();
+        $('#leopard').hide();
+        $('#panda').hide();
+      }
+      else if(qrDecodeData === "345678"){
+        $('#leopard').show();
+        $('#bear').hide();
+        $('#panda').hide();
+      }
+
+      $.ajax({
+        type: "GET",
+        url: `/blocks/${qrDecodeData}`,
+        success: function(data) {
+          (data.length < 1) ? ('#noresult').show() : displayTable(data);
+        },
+        beforeSend: function() {
+          $('#result').hide();
+          $('#noresult').hide();
+          $('#resultTable tbody').empty();
+        } 
+      });
+    }
+
+      
+
+    e.preventDefault();
+  });
+</script>

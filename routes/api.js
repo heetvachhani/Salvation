@@ -7,6 +7,8 @@ var Block = require('../block').Block
 var getGenesisBlock = require('../block').getGenesisBlock
 var bodyParser = require('body-parser');
 var initialPeers = process.env.PEERS ? process.env.PEERS.split(',') : [];
+var axios = require('axios')
+const redis = require('redis')
 
 var sockets = [];
 var MessageType = {
@@ -14,45 +16,93 @@ var MessageType = {
     QUERY_ALL: 1,
     RESPONSE_BLOCKCHAIN: 2
 };
+var client = redis.createClient('redis://redistogo:36dbd143f60a86077a358b0b4e14df0a@albacore.redistogo.com:9013/?db=0');
 
 
-var blockchain = [getGenesisBlock()];
+var blockchain = {}
 
 const initHttpServer = (app) => {
     app.use(bodyParser.json());
 
-    app.get('/blocks', (req, res) => res.send(JSON.stringify(blockchain)));
+    app.get('/blocks/:qrCode', (req, res) => {
+        client.lrange(req.params.qrCode, 0, -1, (err, result) => {
+            const finalRes = result.map((o) => {
+                const resObj = JSON.parse(o)
+                return Object.assign({}, {pos: `${resObj.pos.lat} , ${resObj.pos.lng}`} , resObj.data, { riskFactor: resObj.riskFactor })
+            })
+            res.send(finalRes)
+        });
+    })
+
+    app.post('/startBlockChain', (req, res) => {
+        console.log('check startBlockChain req.body: ', req.body);
+        fetchAndSaveAnimalInfo(req.body, generateFirstBlock)
+        res.send();
+    })
+
     app.post('/mineBlock', (req, res) => {
-        console.log('check req.body: ', req.body);
-        var newBlock = generateNextBlock(req.body);
-        addBlock(newBlock);
-        broadcast(responseLatestMsg());
-        console.log('block added: ' + JSON.stringify(newBlock));
+        console.log('check mineBlock req.body: ', req.body);
+        fetchAndSaveAnimalInfo(req.body, generateNextBlock, addBlock)
         res.send();
     });
+
     app.get('/peers', (req, res) => {
         res.send(sockets.map(s => s._socket.remoteAddress + ':' + s._socket.remotePort));
     });
+
     app.post('/addPeer', (req, res) => {
         connectToPeers([req.body.peer]);
         res.send();
     });
+
     app.listen(http_port, () => console.log('Listening http on port: ' + http_port));
 };
 
-var generateNextBlock = (blockData) => {
-    var previousBlock = getLatestBlock();
-    var nextIndex = previousBlock.index + 1;
-    var nextTimestamp = new Date().getTime() / 1000;
-    var nextHash = calculateHash(nextIndex, previousBlock.hash, nextTimestamp, blockData);
-    return new Block(nextIndex, previousBlock.hash, nextTimestamp, blockData, nextHash);
+const fetchAndSaveAnimalInfo = (reqData, generateBlock, addBlock) => {
+    axios.post('https://eco-savior-ws.herokuapp.com/analyze', reqData).then((response) => {
+        generateBlock(response.data, (result) => {
+            var newBlock = result
+            if(addBlock){
+                addBlock(newBlock, reqData.qrCode)
+            } else {
+                client.rpush([reqData.qrCode, JSON.stringify(newBlock)])
+            }
+            broadcast(responseLatestMsg(newBlock));
+            console.log('block added: ' + JSON.stringify(response.data));
+        });
+    }).catch((err) => {
+        console.log("error in harsh api: ", err);
+    })
+}
+
+
+const generateFirstBlock = (blockData, callback ) => {
+    const index  = 1;
+    const timestamp = new Date().getTime() / 1000;
+    const previousHash = '816534932c2b7154836da6afc367695e6337db8a921823784c14378abed4f7d7'
+    const firstHash = calculateHash(index, previousHash, timestamp, blockData);
+    callback(new Block(index, previousHash, timestamp, blockData, firstHash));
+}
+
+const generateNextBlock = (blockData, callback) => {
+    getLatestBlock(blockData.qrCode, (res) => {
+        var previousBlock = res;
+        var nextIndex = previousBlock.index + 1;
+        var nextTimestamp = new Date().getTime() / 1000;
+        var nextHash = calculateHash(nextIndex, previousBlock.hash, nextTimestamp, blockData);
+        callback(new Block(nextIndex, previousBlock.hash, nextTimestamp, blockData, nextHash));
+    })
 };
 
-var addBlock = (newBlock) => {
-    if (isValidNewBlock(newBlock, getLatestBlock())) {
-        blockchain.push(newBlock);
-    }
+var addBlock = (newBlock, qrCode) => {
+    client.rpush([qrCode, JSON.stringify(newBlock)])
 };
+
+var getLatestBlock = (qrCode, callback) => {
+    client.lrange(qrCode, 0, -1, (err, res) => {
+        callback(JSON.parse(res[res.length - 1]))
+    });
+}
 
 var isValidNewBlock = (newBlock, previousBlock) => {
     if (previousBlock.index + 1 !== newBlock.index) {
@@ -74,14 +124,15 @@ var calculateHashForBlock = (block) => {
 };
 
 var calculateHash = (index, previousHash, timestamp, data) => {
-    return CryptoJS.SHA256(index + previousHash + timestamp + data).toString();
+    const prevHash = previousHash || '816534932c2b7154836da6afc367695e6337db8a921823784c14378abed4f7d7'
+    return CryptoJS.SHA256(index + prevHash + timestamp + data).toString();
 };
 
 var broadcast = (message) => sockets.forEach(socket => write(socket, message));
 
-var responseLatestMsg = () => ({
+var responseLatestMsg = (newBlock) => ({
     'type': MessageType.RESPONSE_BLOCKCHAIN,
-    'data': JSON.stringify([getLatestBlock()])
+    'data': newBlock
 });
 
 const connectToPeers = (newPeers) => {
@@ -167,16 +218,15 @@ var isValidChain = (blockchainToValidate) => {
     return true;
 };
 
-var getLatestBlock = () => blockchain[blockchain.length - 1];
+
+
+
 var queryChainLengthMsg = () => ({'type': MessageType.QUERY_LATEST});
 var queryAllMsg = () => ({'type': MessageType.QUERY_ALL});
 var responseChainMsg = () =>({
     'type': MessageType.RESPONSE_BLOCKCHAIN, 'data': JSON.stringify(blockchain)
 });
-var responseLatestMsg = () => ({
-    'type': MessageType.RESPONSE_BLOCKCHAIN,
-    'data': JSON.stringify([getLatestBlock()])
-});
+
 
 var write = (ws, message) => ws.send(JSON.stringify(message));
 
